@@ -7,8 +7,7 @@ taskset -c 2,3 qemu-system-x86_64 \
     -mem-prealloc \
     -smp 2,sockets=1,dies=1,cores=2,threads=1 \
     -machine type=q35 \
-    -cpu host,migratable=on,hv-time=on,hv-relaxed=on,hv-vapic=on,hv-spinlocks=0x1fff,hv-vpindex=on,hv-synic=on,hv-stimer=on,hv-stimer-direct=on,hv-reset=on,hv-frequencies=on,hv-reenlightenment=on,hv-tlbflush=on,hv-ipi=on \
-    -d all -D /mnt/f8436150-7c53-4617-8018-31e666c67b22/logs/windows11.log.%d \
+    -cpu host,+kvm_pv_unhalt,hv-time=on,hv-relaxed=on,hv-vapic=on,hv-spinlocks=0x1fff,hv-vpindex=on,hv-synic=on,hv-stimer=on,hv-stimer-direct=on,hv-reset=on,hv-frequencies=on,hv-reenlightenment=on,hv-tlbflush=on,hv-ipi=on \
     -drive file=/mnt/f8436150-7c53-4617-8018-31e666c67b22/Windows_11.qcow2,format=qcow2,if=virtio,cache=none,discard=unmap \
     -drive file=/mnt/57C4287151231A2D/ISO/virtio-win-0.1.266.iso,format=raw,if=none,media=cdrom,id=drive-cd1,readonly=on \
     -device ahci,id=achi0 \
@@ -31,6 +30,7 @@ taskset -c 2,3 qemu-system-x86_64 \
 sleep 2
 
 xprop -id $(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2) -f WM_CLASS 8s -set WM_CLASS "windowseleven"
+    #-d all -D /mnt/f8436150-7c53-4617-8018-31e666c67b22/logs/windows11.log.%d \
     #-cdrom /home/esk/Desktop/Files/microwin.iso \
     #-cdrom /mnt/57C4287151231A2D/ISO/Windows\ 10\ Pro\ JULY\ 2024\ UPDATE\ 22H2\ build\ 19045.4651/ISO/Win.10.Pro.19045.4651.iso \
     # -d all -D windows10.log.%d \
