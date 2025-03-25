@@ -8,7 +8,7 @@ taskset -c 2,3 qemu-system-x86_64 \
     -smp 2,sockets=1,dies=1,cores=2,threads=1 \
     -machine type=q35 \
     -cpu host,+kvm_pv_unhalt,hv-time=on,hv-relaxed=on,hv-vapic=on,hv-spinlocks=0x1fff,hv-vpindex=on,hv-synic=on,hv-stimer=on,hv-stimer-direct=on,hv-reset=on,hv-frequencies=on,hv-reenlightenment=on,hv-tlbflush=on,hv-ipi=on \
-    -drive file=/home/esk/VMware/Ubuntu_25_04.qcow2,format=qcow2,if=virtio,cache=none,discard=unmap \
+    -drive file=/mnt/54d34f4b-0246-4c62-ad70-819d091f72db/VD/Ubuntu_25_04.qcow2,format=qcow2,if=virtio,cache=none,discard=unmap \
     -drive file=/mnt/57C4287151231A2D/ISO/virtio-win-0.1.266.iso,format=raw,if=none,media=cdrom,id=drive-cd1,readonly=on \
     -device ahci,id=achi0 \
     -device ide-cd,bus=achi0.0,drive=drive-cd1,id=cd1,bootindex=2 \
