@@ -3,8 +3,6 @@
 taskset -c 2,3 qemu-system-x86_64 \
     -enable-kvm \
     -m 10G \
-    -mem-path /dev/myqemuhugepages \
-    -mem-prealloc \
     -smp 2,sockets=1,dies=1,cores=2,threads=1 \
     -machine type=q35 \
     -cpu host,+kvm_pv_unhalt,hv-time=on,hv-relaxed=on,hv-vapic=on,hv-spinlocks=0x1fff,hv-vpindex=on,hv-synic=on,hv-stimer=on,hv-stimer-direct=on,hv-reset=on,hv-frequencies=on,hv-reenlightenment=on,hv-tlbflush=on,hv-ipi=on \
