@@ -4,7 +4,7 @@ taskset -c 2,3 qemu-system-x86_64 \
     -enable-kvm \
     -m 10G \
     -smp 2,sockets=1,dies=1,cores=2,threads=1 \
-    -machine type=q35 \
+    -machine type=q35,accel=kvm,usb=off \
     -cpu host,+kvm_pv_unhalt,hv-time=on,hv-relaxed=on,hv-vapic=on,hv-spinlocks=0x1fff,hv-vpindex=on,hv-synic=on,hv-stimer=on,hv-stimer-direct=on,hv-reset=on,hv-frequencies=on,hv-reenlightenment=on,hv-tlbflush=on,hv-ipi=on \
     -drive file=/mnt/0ab1d5e2-3585-47a5-b39e-452f73aeac9c/Windows_11.qcow2,format=qcow2,if=virtio,cache=none,discard=unmap \
     -drive file=/mnt/57C4287151231A2D/ISO/virtio-win-0.1.266.iso,format=raw,if=none,media=cdrom,id=drive-cd1,readonly=on \
@@ -21,8 +21,9 @@ taskset -c 2,3 qemu-system-x86_64 \
     -audiodev pipewire,id=snd0 \
     -device ich9-intel-hda \
     -device hda-duplex,audiodev=snd0 \
-    -net nic,model=virtio-net-pci,macaddr=90:94:01:00:00:01 \
-    -net bridge,br=nm-bridge \
+    -netdev bridge,id=net0,br=nm-bridge \
+    -device virtio-net-pci,netdev=net0,mac=90:94:01:00:00:01 \
+    -object thread-context,id=tc1,cpu-affinity=2-3 \
     "$@" &
 
 sleep 2
