@@ -5,8 +5,20 @@ UUID="6a57a4b4-7e69-4038-98ae-5ca73979db06"
 # Create vGPU via sudo helper script
 sudo /usr/local/bin/manage-vgpu.sh create
 
+# echo "0c" | sudo tee "/proc/irq/137/smp_affinity"  # Binary 11 = CPUs 2 and 3
+# sudo echo "0c" > /proc/irq/137/smp_affinity  # Binary 11 = CPUs 2 and 3
+
+# CPU isolation using cgroup v2 for QEMU
+CGROUP=/sys/fs/cgroup/qemu-vm
+CPUS="2-3"
+
+# Create and configure cgroup
+sudo mkdir -p "$CGROUP"
+echo "$CPUS" | sudo tee "$CGROUP/cpuset.cpus"
+echo 0 | sudo tee "$CGROUP/cpuset.mems"
+
 # --- Launch QEMU with vGPU ---
-taskset -c 2,3 qemu-system-x86_64 \
+qemu-system-x86_64 \
     -enable-kvm \
     -m 10G \
     -smp 2,sockets=1,dies=1,cores=2,threads=1 \
@@ -29,8 +41,15 @@ taskset -c 2,3 qemu-system-x86_64 \
     -device hda-duplex,audiodev=snd0 \
     -netdev bridge,id=net0,br=nm-bridge \
     -device virtio-net-pci,netdev=net0,mac=90:94:01:00:00:01 \
-    -object thread-context,id=tc1,cpu-affinity=2-3 \
-    "$@"
+    "$@" &
+
+QEMU_PID=$!
+echo "$QEMU_PID" | sudo tee "$CGROUP/cgroup.procs"
+
+# Wait for VM to finish
+wait $QEMU_PID
+
+#sudo rmdir "$CGROUP"
 
 # --- Remove vGPU after VM shuts down ---
 sudo /usr/local/bin/manage-vgpu.sh remove
