@@ -16,12 +16,13 @@ taskset -c 2,3 qemu-system-x86_64 \
   -object memory-backend-memfd,id=mem,size=10G,share=on \
   -numa node,memdev=mem \
   -object iothread,id=iothread0 \
-  -blockdev driver=file,filename=/mnt/0ab1d5e2-3585-47a5-b39e-452f73aeac9c/Windows_11.qcow2,node-name=hd0,cache.direct=on,cache.no-flush=off,aio=threads \
+  -blockdev driver=file,filename=/mnt/0ab1d5e2-3585-47a5-b39e-452f73aeac9c/Windows_11.qcow2,node-name=hd0,cache.direct=on,cache.no-flush=off,aio=threads,discard=unmap \
   -blockdev driver=qcow2,file=hd0,node-name=hd1 \
   -device virtio-blk-pci,drive=hd1,iothread=iothread0 \
-  -drive file=/mnt/57C4287151231A2D/ISO/virtio-win-0.1.266.iso,format=raw,if=none,media=cdrom,id=drive-cd1,readonly=on \
+  -drive file=/mnt/57C4287151231A2D/ISO/HBCD_PE_x64_V_1_0_8.iso,format=raw,if=none,media=cdrom,id=drive-cd1,readonly=on \
   -device ahci,id=achi0 \
   -device ide-cd,bus=achi0.0,drive=drive-cd1,id=cd1,bootindex=1 \
+  -cdrom /mnt/57C4287151231A2D/ISO/virtio-win-0.1.266.iso \
   -name Windows_11 \
   -rtc base=localtime \
   -usb \
