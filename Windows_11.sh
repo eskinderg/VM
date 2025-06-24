@@ -30,7 +30,7 @@ taskset -c 2,3 qemu-system-x86_64 \
   -device usb-tablet \
   -device vfio-pci,sysfsdev=/sys/devices/pci0000:00/0000:00:02.0/${UUID},x-igd-opregion=on,display=on,driver=vfio-pci-nohotplug,ramfb=on \
   -vga none \
-  -display gtk,gl=on \
+  -display gtk,gl=on,window-close=off \
   -audiodev pipewire,id=snd0 \
   -device ich9-intel-hda \
   -device hda-duplex,audiodev=snd0 \
