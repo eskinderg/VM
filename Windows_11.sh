@@ -1,5 +1,10 @@
 #!/bin/bash
 
+UUID="6a57a4b4-7e69-4038-98ae-5ca73979db06"
+
+# Create vGPU via sudo helper script
+sudo /usr/local/bin/manage-vgpu.sh create
+
 taskset -c 2,3 qemu-system-x86_64 \
   -enable-kvm \
   \
@@ -8,7 +13,7 @@ taskset -c 2,3 qemu-system-x86_64 \
   -mem-prealloc \
   \
   -drive if=pflash,format=raw,readonly=on,file=/usr/share/ovmf/OVMF.fd \
-  -drive if=pflash,format=raw,file=/home/esk/Desktop/OV.fd \
+  -drive if=pflash,format=raw,file=/home/esk/OV.fd \
   \
   -smp 2,sockets=1,dies=1,cores=2,threads=1 \
   -machine type=q35,accel=kvm,usb=off \
@@ -31,10 +36,9 @@ taskset -c 2,3 qemu-system-x86_64 \
   -device virtio-balloon-pci \
   -device usb-tablet \
   \
+  -display gtk,gl=on,window-close=off \
+  -device vfio-pci,sysfsdev=/sys/devices/pci0000:00/0000:00:02.0/${UUID},x-igd-opregion=on,display=on,ramfb=on,driver=vfio-pci-nohotplug,romfile=/usr/share/vgabios/i915ovmf.rom \
   -vga none \
-  -device ramfb,id=ramfb0 \
-  -device vfio-pci,host=04:00.0,multifunction=on \
-  -device vfio-pci,host=04:00.1 \
   \
   -audiodev pipewire,id=snd0 \
   -device ich9-intel-hda \
@@ -50,3 +54,6 @@ taskset -c 2,3 qemu-system-x86_64 \
 QEMU_PID=$!
 
 wait $QEMU_PID
+
+# --- Remove vGPU after VM shuts down ---
+sudo /usr/local/bin/manage-vgpu.sh remove

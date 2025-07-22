@@ -9,8 +9,8 @@ taskset -c 2,3 qemu-system-x86_64 \
   -enable-kvm \
   \
   -m 10G \
-  -object memory-backend-memfd,id=mem,size=10G,share=on \
-  -numa node,memdev=mem \
+  -mem-path /dev/myqemuhugepages \
+  -mem-prealloc \
   \
   -smp 2,sockets=1,dies=1,cores=2,threads=1 \
   -machine type=q35,accel=kvm,usb=off \
