@@ -9,8 +9,8 @@ taskset -c 2,3 qemu-system-x86_64 \
   -enable-kvm \
   \
   -m 10G \
-  -mem-path /dev/myqemuhugepages \
-  -mem-prealloc \
+  -object memory-backend-memfd,id=mem,size=10G,share=on \
+  -numa node,memdev=mem \
   \
   -drive if=pflash,format=raw,readonly=on,file=/usr/share/ovmf/OVMF.fd \
   -drive if=pflash,format=raw,file=/home/esk/OV.fd \

@@ -9,8 +9,8 @@ taskset -c 2,3 qemu-system-x86_64 \
   -enable-kvm \
   \
   -m 10G \
-  -mem-path /dev/myqemuhugepages \
-  -mem-prealloc \
+  -object memory-backend-memfd,id=mem,size=10G,share=on \
+  -numa node,memdev=mem \
   \
   -smp 2,sockets=1,dies=1,cores=2,threads=1 \
   -machine type=q35,accel=kvm,usb=off \
@@ -32,6 +32,8 @@ taskset -c 2,3 qemu-system-x86_64 \
   -device vfio-pci,sysfsdev=/sys/devices/pci0000:00/0000:00:02.0/${UUID},x-igd-opregion=on,display=on,driver=vfio-pci-nohotplug,ramfb=on \
   -vga none \
   -display gtk,gl=on,window-close=off \
+  -device vfio-pci,host=04:00.0,multifunction=on \
+  -device vfio-pci,host=04:00.1 \
   \
   -audiodev pipewire,id=snd0 \
   -device ich9-intel-hda \
