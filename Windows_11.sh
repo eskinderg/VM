@@ -30,7 +30,6 @@ taskset -c 2,3 qemu-system-x86_64 \
   -name Windows_11 \
   -rtc base=localtime \
   \
-  -device virtio-balloon-pci \
   -usb \
   -device usb-tablet \
   \
