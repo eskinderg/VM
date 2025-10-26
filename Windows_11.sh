@@ -17,10 +17,9 @@ taskset -c 2,3 qemu-system-x86_64 \
   \
   -smp 2,sockets=1,dies=1,cores=2,threads=1 \
   -machine type=q35,accel=kvm,usb=off \
-  -cpu host,+invtsc,+kvm_pv_unhalt,hv-time=on,hv-relaxed=on,hv-vapic=on,hv-spinlocks=0x1fff,hv-vpindex=on,hv-synic=on,hv-stimer=on,hv-stimer-direct=on,hv-reset=on,hv-frequencies=on,hv-reenlightenment=on,hv-tlbflush=on,hv-ipi=on \
-  -overcommit cpu-pm=on \
+  -cpu host,+kvm_pv_unhalt,hv-time=on,hv-relaxed=on,hv-vapic=on,hv-spinlocks=0x1fff,hv-vpindex=on,hv-synic=on,hv-stimer=on,hv-stimer-direct=on,hv-reset=on,hv-frequencies=on,hv-reenlightenment=on,hv-tlbflush=on,hv-ipi=on \
   \
-  -drive file=/mnt/a16b6d0c-4275-466e-8378-0356bc49dcc4/Windows_11.qcow2,if=none,id=nvm,cache=none,aio=native \
+  -drive file=/mnt/a16b6d0c-4275-466e-8378-0356bc49dcc4/Windows_11.qcow2,if=none,id=nvm,cache=none,aio=threads \
   -device nvme,drive=nvm,serial=qcow2Serial \
   -object iothread,id=ioth0 \
   \
@@ -30,7 +29,7 @@ taskset -c 2,3 qemu-system-x86_64 \
   -cdrom /mnt/57C4287151231A2D/ISO/virtio-win-0.1.266.iso \
   \
   -name Windows_11 \
-  -rtc base=localtime,clock=host,driftfix=slew \
+  -rtc base=localtime \
   \
   -device virtio-balloon-pci \
   -usb \
@@ -46,8 +45,6 @@ taskset -c 2,3 qemu-system-x86_64 \
   \
   -netdev bridge,id=net0,br=nm-bridge \
   -device virtio-net-pci,netdev=net0,mac=90:94:01:00:00:01,mq=on,vectors=4 \
-  \
-  -object thread-context,id=tc1,cpu-affinity=2-3 \
   \
   "$@" &
 

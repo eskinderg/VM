@@ -29,11 +29,9 @@ taskset -c 2,3 qemu-system-x86_64 \
   -device virtio-balloon-pci \
   -device usb-tablet \
   \
-  -device vfio-pci,sysfsdev=/sys/devices/pci0000:00/0000:00:02.0/${UUID},x-igd-opregion=on,display=on,driver=vfio-pci-nohotplug,ramfb=on \
-  -vga none \
   -display gtk,gl=on,window-close=off \
-  -device vfio-pci,host=04:00.0,multifunction=on \
-  -device vfio-pci,host=04:00.1 \
+  -device vfio-pci,sysfsdev=/sys/devices/pci0000:00/0000:00:02.0/${UUID},x-igd-opregion=on,display=on,ramfb=on,driver=vfio-pci-nohotplug,romfile=/usr/share/vgabios/i915ovmf.rom \
+  -vga none \
   \
   -audiodev pipewire,id=snd0 \
   -device ich9-intel-hda \
