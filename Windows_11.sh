@@ -19,7 +19,7 @@ taskset -c 2,3 qemu-system-x86_64 \
   -machine type=q35,accel=kvm,usb=off \
   -cpu host,+kvm_pv_unhalt,hv-time=on,hv-relaxed=on,hv-vapic=on,hv-spinlocks=0x1fff,hv-vpindex=on,hv-synic=on,hv-stimer=on,hv-stimer-direct=on,hv-reset=on,hv-frequencies=on,hv-reenlightenment=on,hv-tlbflush=on,hv-ipi=on \
   \
-  -drive file=/mnt/a16b6d0c-4275-466e-8378-0356bc49dcc4/Windows_11.qcow2,if=none,id=nvm,cache=none,aio=threads \
+  -drive file=/mnt/a16b6d0c-4275-466e-8378-0356bc49dcc4/Windows_11.qcow2,if=none,id=nvm,cache=none,aio=native \
   -device nvme,drive=nvm,serial=qcow2Serial \
   -object iothread,id=ioth0 \
   \
