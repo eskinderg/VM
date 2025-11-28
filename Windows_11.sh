@@ -33,7 +33,7 @@ taskset -c 2,3 qemu-system-x86_64 \
   -usb \
   -device usb-tablet \
   \
-  -display gtk,gl=on,window-close=off \
+  -display gtk,gl=on,window-close=off,show-menubar=off \
   -device vfio-pci,sysfsdev=/sys/devices/pci0000:00/0000:00:02.0/${UUID},x-igd-opregion=on,display=on,ramfb=on,driver=vfio-pci-nohotplug,romfile=/usr/share/vgabios/i915ovmf.rom \
   -vga none \
   \
