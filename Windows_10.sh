@@ -13,7 +13,7 @@ sudo /usr/local/bin/manage-vgpu.sh create
   -numa node,memdev=mem \
   \
   -smp 2,sockets=1,dies=1,cores=2,threads=1 \
-  -machine type=q35,accel=kvm,usb=off \
+  -machine type=q35,accel=kvm,usb=off,hpet=off \
   -cpu host,+kvm_pv_unhalt,hv-time=on,hv-relaxed=on,hv-vapic=on,hv-spinlocks=0x1fff,hv-vpindex=on,hv-synic=on,hv-stimer=on,hv-stimer-direct=on,hv-reset=on,hv-frequencies=on,hv-reenlightenment=on,hv-tlbflush=on,hv-ipi=on,hv-runtime=on,hv-passthrough=on \
   \
   -drive file=/home/esk/VMware/Windows_10.qcow2,format=qcow2,if=virtio,cache=none,discard=unmap,aio=threads \
