@@ -5,7 +5,7 @@ UUID="6a57a4b4-7e69-4038-98ae-5ca73979db06"
 # Create vGPU via sudo helper script
 sudo /usr/local/bin/manage-vgpu.sh create
 
-taskset -c 2,3 qemu-system-x86_64 \
+  nice -n -12 taskset -c 2,3 qemu-system-x86_64 \
   -enable-kvm \
   \
   -m 10G \
@@ -31,14 +31,14 @@ taskset -c 2,3 qemu-system-x86_64 \
   -device vfio-pci,sysfsdev=/sys/devices/pci0000:00/0000:00:02.0/${UUID},x-igd-opregion=on,display=on,ramfb=on,driver=vfio-pci-nohotplug,romfile=/usr/share/vgabios/i915ovmf.rom \
   -vga none \
   \
-  -audiodev pipewire,id=snd0 \
-  -device ich9-intel-hda \
-  -device hda-duplex,audiodev=snd0 \
+  -audiodev pipewire,id=snd0,out.frequency=48000,out.buffer-length=50000,timer-period=10000 \
+  -device ich9-intel-hda -device hda-duplex,audiodev=snd0 \
   \
   -netdev bridge,id=net0,br=nm-bridge \
   -device virtio-net-pci,netdev=net0,mac=90:94:01:00:00:01 \
   -overcommit mem-lock=on \
   \
+  -global kvm-pit.lost_tick_policy=delay \
   "$@" &
 
 QEMU_PID=$!
