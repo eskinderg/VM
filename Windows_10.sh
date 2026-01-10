@@ -5,7 +5,7 @@ UUID="6a57a4b4-7e69-4038-98ae-5ca73979db06"
 # Create vGPU via sudo helper script
 sudo /usr/local/bin/manage-vgpu.sh create
 
-  nice -n -12 taskset -c 2,3 qemu-system-x86_64 \
+  nice -n -15 taskset -c 2,3 qemu-system-x86_64 \
   -enable-kvm \
   \
   -m 10G \
