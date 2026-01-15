@@ -3,6 +3,15 @@
 
 UUID="6a57a4b4-7e69-4038-98ae-5ca73979db06"
 
+# 1. Clear caches to free up "easy" RAM
+sync && sudo sysctl -w vm.drop_caches=3
+
+# 2. Force the kernel to compact memory into contiguous blocks
+sudo sysctl -w vm.compact_memory=1
+
+# 3. Allocate the HugePages
+sudo sysctl -w vm.nr_hugepages=5120
+
 # Create vGPU via sudo helper script
 sudo /usr/local/bin/manage-vgpu.sh create
 
@@ -10,7 +19,7 @@ sudo /usr/local/bin/manage-vgpu.sh create
   -enable-kvm \
   \
   -m 10G \
-  -object memory-backend-memfd,id=mem,size=10G,share=on,prealloc=on \
+  -object memory-backend-memfd,id=mem,size=10G,share=off,prealloc=on,hugetlb=on \
   -numa node,memdev=mem \
   \
   -drive if=pflash,format=raw,readonly=on,file=/usr/share/ovmf/OVMF.fd \
@@ -20,8 +29,9 @@ sudo /usr/local/bin/manage-vgpu.sh create
   -machine type=q35,accel=kvm,usb=off,hpet=off \
   -cpu host,+kvm_pv_unhalt,hv-time=on,hv-relaxed=on,hv-vapic=on,hv-spinlocks=0x1fff,hv-vpindex=on,hv-synic=on,hv-stimer=on,hv-stimer-direct=on,hv-reset=on,hv-frequencies=on,hv-reenlightenment=on,hv-tlbflush=on,hv-ipi=on,hv-runtime=on,hv-passthrough=on \
   \
-  -drive file=/mnt/a16b6d0c-4275-466e-8378-0356bc49dcc4/Windows_11.qcow2,if=none,id=nvm,cache=none,aio=native,discard=unmap,detect-zeroes=unmap \
-  -device nvme,drive=nvm,serial=qcow2Serial \
+  -object iothread,id=iothread0,poll-max-ns=0 \
+  -drive file=/mnt/a16b6d0c-4275-466e-8378-0356bc49dcc4/Windows_11.qcow2,if=none,id=drive0,cache=none,aio=native,discard=unmap,detect-zeroes=unmap \
+  -device virtio-blk-pci,drive=drive0,iothread=iothread0,num-queues=2 \
   \
   -drive file=/mnt/57C4287151231A2D/ISO/MICRO_WIN11.iso,format=raw,if=none,media=cdrom,id=drive-cd1,readonly=on \
   -device ahci,id=achi0 \
@@ -54,3 +64,5 @@ wait $QEMU_PID
 
 # --- Remove vGPU after VM shuts down ---
 sudo /usr/local/bin/manage-vgpu.sh remove
+
+sudo sysctl -w vm.nr_hugepages=0
